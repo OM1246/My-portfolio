@@ -521,6 +521,50 @@
           font-size: 0.7rem;
           padding: 6px 10px;
         }
+        
+        /* Mobile Modal Styles */
+        .modal-content {
+          max-height: 90vh;
+          overflow-y: auto;
+          margin: 1rem;
+        }
+        
+        .modal-content img {
+          height: 180px !important;
+        }
+        
+        .modal-content .p-8 {
+          padding: 1.5rem !important;
+        }
+        
+        .modal-content h2 {
+          font-size: 1.5rem !important;
+        }
+        
+        .modal-content p {
+          font-size: 0.9rem !important;
+        }
+        
+        .modal-content h4 {
+          font-size: 1rem !important;
+        }
+        
+        #modal-links {
+          flex-direction: column !important;
+        }
+        
+        #modal-links a {
+          width: 100%;
+          text-align: center;
+        }
+        
+        #modal-close {
+          top: 0.5rem !important;
+          right: 0.5rem !important;
+          width: 2rem !important;
+          height: 2rem !important;
+          font-size: 1.5rem !important;
+        }
       }
     </style>
   </head>
@@ -1073,14 +1117,14 @@
     <!-- Project Modal -->
     <div
       id="project-modal"
-      class="modal-container fixed inset-0 bg-black bg-opacity-80 z-[60] flex items-center justify-center p-4 invisible opacity-0"
+      class="modal-container fixed inset-0 bg-black bg-opacity-80 z-[60] flex items-center justify-center p-2 md:p-4 invisible opacity-0"
     >
       <div
-        class="modal-content glass-card max-w-3xl w-full relative transform scale-95"
+        class="modal-content glass-card max-w-3xl w-full relative transform scale-95 max-h-[95vh] overflow-y-auto"
       >
         <button
           id="modal-close"
-          class="absolute -top-4 -right-4 bg-[var(--primary-color)] text-[var(--bg-color)] w-10 h-10 rounded-full text-2xl font-bold"
+          class="absolute top-2 right-2 md:-top-4 md:-right-4 bg-[var(--primary-color)] text-[var(--bg-color)] w-8 h-8 md:w-10 md:h-10 rounded-full text-xl md:text-2xl font-bold z-10"
         >
           &times;
         </button>
@@ -1088,16 +1132,16 @@
           id="modal-image"
           src=""
           alt="Project Image"
-          class="w-full h-64 object-cover rounded-t-lg"
+          class="w-full h-48 md:h-64 object-cover rounded-t-lg"
         />
-        <div class="p-8">
-          <h2 id="modal-title" class="text-3xl font-bold mb-2 text-glow"></h2>
-          <p id="modal-description" class="mb-4"></p>
+        <div class="p-4 md:p-8">
+          <h2 id="modal-title" class="text-2xl md:text-3xl font-bold mb-2 text-glow"></h2>
+          <p id="modal-description" class="mb-4 text-sm md:text-base"></p>
           <div class="mb-6">
-            <h4 class="font-semibold w-full mb-2">Tech Stack:</h4>
+            <h4 class="font-semibold w-full mb-2 text-base md:text-lg">Tech Stack:</h4>
             <div id="modal-tech" class="flex flex-wrap gap-2"></div>
           </div>
-          <div id="modal-links" class="flex gap-4"></div>
+          <div id="modal-links" class="flex flex-col md:flex-row gap-4"></div>
         </div>
       </div>
     </div>
