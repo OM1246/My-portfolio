@@ -20,6 +20,17 @@ body {
   font-family: var(--font-body);
   overflow-x: hidden;
   cursor: default; /* Reset custom cursor default */
+  transition: filter 0.3s ease;
+}
+
+body.invert-mode {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+/* Fix images and specific elements in invert mode so they don't look weird */
+body.invert-mode img,
+body.invert-mode .invert-protected {
+  filter: invert(1) hue-rotate(180deg);
 }
 
 /* --- Utilities --- */
@@ -154,6 +165,30 @@ a[href="OM-Panchal_resume.pdf"]:hover {
   border-color: #000;
 }
 
+/* --- Scroll Reveal --- */
+.reveal {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered slide-in for sections */
+section:nth-of-type(odd).reveal {
+  transform: translateX(-50px);
+}
+section:nth-of-type(even).reveal {
+  transform: translateX(50px);
+}
+
+section.reveal.visible {
+  transform: translateX(0);
+}
+
 /* --- Loader --- */
 #startup-loader {
   transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
@@ -186,6 +221,74 @@ a[href="OM-Panchal_resume.pdf"]:hover {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--accent-color);
+}
+
+/* --- Marquee --- */
+.marquee-container {
+  white-space: nowrap;
+}
+
+.marquee-content {
+  display: inline-block;
+  animation: marquee 20s linear infinite;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* --- Speech Bubbles --- */
+.speech-bubble {
+  position: relative;
+  background: #fff;
+  border: 4px solid #000;
+  padding: 2rem;
+  box-shadow: 8px 8px 0 0 #000;
+}
+
+.speech-bubble::before {
+  content: "";
+  position: absolute;
+  left: -24px;
+  top: 40px;
+  width: 0;
+  height: 0;
+  border-top: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+  border-right: 24px solid #000;
+}
+
+.speech-bubble::after {
+  content: "";
+  position: absolute;
+  left: -16px;
+  top: 40px;
+  width: 0;
+  height: 0;
+  border-top: 16px solid transparent;
+  border-bottom: 16px solid transparent;
+  border-right: 20px solid #fff;
+}
+
+/* On mobile, move tail to top */
+@media (max-width: 768px) {
+  .speech-bubble::before {
+    left: 50%;
+    top: -24px;
+    border-right: 20px solid transparent;
+    border-left: 20px solid transparent;
+    border-bottom: 24px solid #000;
+    transform: translateX(-50%);
+  }
+  .speech-bubble::after {
+    left: 50%;
+    top: -16px;
+    border-right: 16px solid transparent;
+    border-left: 16px solid transparent;
+    border-bottom: 20px solid #fff;
+    transform: translateX(-50%);
+  }
 }
 
 /* --- Mobile Menu --- */

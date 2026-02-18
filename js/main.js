@@ -176,6 +176,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const customizer = document.getElementById("theme-customizer");
     const toggleBtn = document.getElementById("customizer-toggle");
     const swatches = document.querySelectorAll(".color-swatch");
+    const invertBtn = document.getElementById("invert-mode-btn");
 
     toggleBtn.addEventListener("click", () => {
       customizer.classList.toggle("-right-48");
