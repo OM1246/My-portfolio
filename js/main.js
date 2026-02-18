@@ -3,98 +3,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --- 0. Startup Loader ---
   const initStartupLoader = () => {
-    const loader = document.getElementById('startup-loader');
+    const loader = document.getElementById("startup-loader");
     const body = document.body;
-    const percentageEl = document.getElementById('loader-percentage');
-    const particlesContainer = document.getElementById('particles-container');
-    
-    // Generate floating particles
-    for (let i = 0; i < 30; i++) {
-      const particle = document.createElement('div');
-      particle.className = 'loader-particle';
-      particle.style.left = Math.random() * 100 + '%';
-      particle.style.top = Math.random() * 100 + '%';
-      particle.style.animationDelay = Math.random() * 3 + 's';
-      particle.style.animationDuration = (2 + Math.random() * 2) + 's';
-      particlesContainer.appendChild(particle);
-    }
-    
-    // Animate percentage counter
+    const progressBar = document.getElementById("new-loader-bar");
+
+    // Animate progress bar
     let percentage = 0;
     const percentageInterval = setInterval(() => {
-      percentage += Math.floor(Math.random() * 10) + 3;
+      percentage += Math.floor(Math.random() * 5) + 2; // Slower increment for smoothness
       if (percentage >= 100) {
         percentage = 100;
         clearInterval(percentageInterval);
+        
+        // Hide loader after completion
+        setTimeout(() => {
+          loader.classList.add("loader-hide");
+          body.classList.remove("loading");
+        }, 500);
       }
-      percentageEl.textContent = percentage + '%';
-    }, 150);
-    
-    // Hide loader after 4.5 seconds
-    setTimeout(() => {
-      loader.classList.add('hidden');
-      body.classList.remove('loading');
-    }, 4500);
-  };
-
-  // --- 1. 3D Background Animation ---
-  const initThreeJS = () => {
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(
-      75,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      1000
-    );
-    const renderer = new THREE.WebGLRenderer({
-      canvas: document.getElementById("bg-canvas"),
-      alpha: true,
-    });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    camera.position.z = 5;
-    const particlesGeometry = new THREE.BufferGeometry();
-    const particlesCount = 5000;
-    const posArray = new Float32Array(particlesCount * 3);
-    for (let i = 0; i < particlesCount * 3; i++) {
-      posArray[i] = (Math.random() - 0.5) * 10;
-    }
-    particlesGeometry.setAttribute(
-      "position",
-      new THREE.BufferAttribute(posArray, 3)
-    );
-    const particlesMaterial = new THREE.PointsMaterial({
-      size: 0.008,
-      color: getComputedStyle(root).getPropertyValue("--primary-color"),
-    });
-    const particlesMesh = new THREE.Points(
-      particlesGeometry,
-      particlesMaterial
-    );
-    scene.add(particlesMesh);
-    let mouseX = 0,
-      mouseY = 0;
-    document.addEventListener("mousemove", (event) => {
-      mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-      mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
-    });
-    const clock = new THREE.Clock();
-    const animate = () => {
-      const elapsedTime = clock.getElapsedTime();
-      particlesMesh.rotation.y = elapsedTime * 0.1;
-      particlesMesh.rotation.x = mouseY * 0.2;
-      particlesMesh.rotation.y += mouseX * 0.2;
-      renderer.render(scene, camera);
-      window.requestAnimationFrame(animate);
-    };
-    animate();
-    window.addEventListener("resize", () => {
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-    });
-    document.addEventListener("themeChanged", (e) => {
-      particlesMesh.material.color.set(e.detail.color);
-    });
+      if (progressBar) {
+        progressBar.style.width = percentage + "%";
+      }
+    }, 50);
   };
 
   // --- 2. Custom Cursor & Sound Logic ---
@@ -116,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     const interactiveElements = document.querySelectorAll(
-      "a, button, .project-card, .color-swatch"
+      "a, button, .project-card, .color-swatch, .neo-box, .neo-btn",
     );
     interactiveElements.forEach((el) => {
       el.addEventListener("mouseenter", () => {
@@ -125,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
         hoverSound.play().catch((e) => {});
       });
       el.addEventListener("mouseleave", () =>
-        cursorOutline.classList.remove("hover")
+        cursorOutline.classList.remove("hover"),
       );
       el.addEventListener("click", () => {
         clickSound.currentTime = 0;
@@ -152,11 +82,12 @@ document.addEventListener("DOMContentLoaded", () => {
         "Integrating Intelligence into Applications.",
         "Let's build something amazing together.",
       ],
-      typeSpeed: 50,
-      backSpeed: 25,
+      typeSpeed: 40,
+      backSpeed: 20,
       backDelay: 1500,
       loop: true,
       smartBackspace: true,
+      showCursor: false, // Hide default cursor, we'll use block cursor if needed or just text
     });
   };
 
@@ -171,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         });
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     );
     revealElements.forEach((el) => observer.observe(el));
   };
@@ -186,8 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
     projectCards.forEach((card) => {
       card.addEventListener("click", () => {
         document.getElementById("modal-image").src = card.dataset.image;
-        document.getElementById("modal-title").textContent =
-          card.dataset.title;
+        document.getElementById("modal-title").textContent = card.dataset.title;
         document.getElementById("modal-description").textContent =
           card.dataset.description;
 
@@ -196,15 +126,15 @@ document.addEventListener("DOMContentLoaded", () => {
         card.dataset.tech.split(",").forEach((tech) => {
           const techPill = document.createElement("span");
           techPill.className =
-            "bg-gray-700 text-sm text-[var(--primary-color)] px-3 py-1 rounded-full";
+            "bg-yellow-300 text-black border-2 border-black font-bold text-sm px-3 py-1 mr-2 mb-2 inline-block shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]";
           techPill.textContent = tech.trim();
           techContainer.appendChild(techPill);
         });
 
         const linksContainer = document.getElementById("modal-links");
         linksContainer.innerHTML = `
-              <a href="${card.dataset.liveUrl}" target="_blank" class="bg-[var(--primary-color)] text-[var(--bg-color)] px-4 py-2 rounded-lg font-semibold hover:opacity-80 transition-opacity">Live Demo</a>
-              <a href="${card.dataset.githubUrl}" target="_blank" class="bg-transparent border border-[var(--primary-color)] text-[var(--primary-color)] px-4 py-2 rounded-lg font-semibold hover:bg-[var(--primary-color)] hover:text-black transition-colors">GitHub</a>
+              <a href="${card.dataset.liveUrl}" target="_blank" class="bg-[var(--primary-color)] text-black border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] px-4 py-2 font-bold hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all">Live Demo</a>
+              <a href="${card.dataset.githubUrl}" target="_blank" class="bg-white text-black border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] px-4 py-2 font-bold hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all">GitHub</a>
           `;
 
         modal.classList.remove("invisible", "opacity-0");
@@ -256,29 +186,13 @@ document.addEventListener("DOMContentLoaded", () => {
       swatch.addEventListener("click", () => {
         const color = swatch.dataset.color;
         root.style.setProperty("--primary-color", color);
-
-        const r = parseInt(color.slice(1, 3), 16);
-        const g = parseInt(color.slice(3, 5), 16);
-        const b = parseInt(color.slice(5, 7), 16);
-        root.style.setProperty("--primary-rgb", `${r}, ${g}, ${b}`);
-
-        document.dispatchEvent(
-          new CustomEvent("themeChanged", { detail: { color: color } })
-        );
       });
     });
-    const initialColor = getComputedStyle(root)
-      .getPropertyValue("--primary-color")
-      .trim();
-    const r = parseInt(initialColor.slice(1, 3), 16);
-    const g = parseInt(initialColor.slice(3, 5), 16);
-    const b = parseInt(initialColor.slice(5, 7), 16);
-    root.style.setProperty("--primary-rgb", `${r}, ${g}, ${b}`);
   };
 
   // Initialize all features
   initStartupLoader();
-  initThreeJS();
+  // initThreeJS(); // REMOVED
   initCursorAndSounds();
   initTyped();
   initScrollReveal();
