@@ -191,6 +191,118 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   };
 
+  // --- Scroll Progress ---
+  const scrollProgress = document.getElementById("scroll-progress");
+  window.addEventListener("scroll", () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.body.scrollHeight - window.innerHeight;
+    const scrollPercent = (scrollTop / docHeight) * 100;
+    if (scrollProgress) {
+      scrollProgress.style.width = `${scrollPercent}%`;
+    }
+  });
+
+  // --- Draggable Skills (Fridge Magnets) ---
+  const skills = document.querySelectorAll(".skill-pill");
+  
+  skills.forEach((skill) => {
+    // Random rotation for "messy" look
+    const randomRot = Math.random() * 10 - 5;
+    skill.style.transform = `rotate(${randomRot}deg)`;
+    skill.style.position = "relative"; 
+
+    let isDragging = false;
+    let startX, startY;
+    let currentX = 0;
+    let currentY = 0;
+
+    const startDrag = (e) => {
+      isDragging = true;
+      skill.style.cursor = "grabbing";
+      skill.style.zIndex = "100";
+      skill.style.transition = "none";
+
+      if (e.type === "mousedown") {
+        startX = e.clientX;
+        startY = e.clientY;
+      } else {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+      }
+    };
+
+    const drag = (e) => {
+      if (!isDragging) return;
+      e.preventDefault();
+
+      let clientX, clientY;
+      if (e.type === "mousemove") {
+        clientX = e.clientX;
+        clientY = e.clientY;
+      } else {
+        clientX = e.touches[0].clientX;
+        clientY = e.touches[0].clientY;
+      }
+
+      const dx = clientX - startX;
+      const dy = clientY - startY;
+
+      skill.style.transform = `translate(${currentX + dx}px, ${currentY + dy}px) rotate(${randomRot}deg) scale(1.1)`;
+    };
+
+    const stopDrag = (e) => {
+      if (!isDragging) return;
+      isDragging = false;
+      skill.style.cursor = "grab";
+      skill.style.zIndex = "";
+      skill.style.transition = "transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
+
+      let clientX, clientY;
+      if (e.type === "mouseup") {
+        clientX = e.clientX;
+        clientY = e.clientY;
+      } else if (e.changedTouches) {
+         clientX = e.changedTouches[0].clientX;
+         clientY = e.changedTouches[0].clientY;
+      } else {
+         clientX = startX; 
+         clientY = startY;
+      }
+
+      const dx = clientX - startX;
+      const dy = clientY - startY;
+      
+      currentX += dx;
+      currentY += dy;
+
+      skill.style.transform = `translate(${currentX}px, ${currentY}px) rotate(${randomRot}deg) scale(1)`;
+    };
+
+    skill.addEventListener("mousedown", startDrag);
+    skill.addEventListener("touchstart", startDrag, { passive: false });
+
+    window.addEventListener("mousemove", drag);
+    window.addEventListener("touchmove", drag, { passive: false });
+
+    window.addEventListener("mouseup", stopDrag);
+    window.addEventListener("touchend", stopDrag);
+  });
+
+  // --- Contact Stamp Logic ---
+  const contactBtn = document.querySelector("#contact button[type='submit']");
+  const stamp = document.getElementById("contact-stamp");
+
+  if (contactBtn && stamp) {
+    contactBtn.addEventListener("mouseenter", () => {
+      stamp.classList.remove("opacity-0");
+      stamp.classList.add("stamp-active");
+    });
+    contactBtn.addEventListener("mouseleave", () => {
+      stamp.classList.remove("stamp-active");
+      stamp.classList.add("opacity-0");
+    });
+  }
+
   // Initialize all features
   initStartupLoader();
   // initThreeJS(); // REMOVED

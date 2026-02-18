@@ -12,6 +12,21 @@
   --font-body: "Poppins", sans-serif;
 }
 
+/* --- Scroll Progress --- */
+#scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 8px;
+  background: var(--primary-color);
+  width: 0%;
+  z-index: 9999;
+  border-bottom: 2px solid black;
+  border-right: 2px solid black; /* Sketchy look */
+  box-shadow: 2px 2px 0 0 rgba(0,0,0,0.1);
+  transition: width 0.1s linear;
+}
+
 body {
   background-color: var(--bg-color);
   background-image: radial-gradient(#000 1px, transparent 1px);
@@ -236,6 +251,48 @@ section.reveal.visible {
 @keyframes marquee {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
+}
+
+/* --- Draggable Skills --- */
+.skill-pill {
+  display: inline-block;
+  font-weight: bold;
+  font-size: 0.9rem;
+  padding: 0.25rem 0.75rem;
+  background: white;
+  border: 2px solid black;
+  border-radius: 999px;
+  box-shadow: 2px 2px 0 0 black;
+  user-select: none;
+  touch-action: none;
+  cursor: grab;
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.skill-pill:active {
+  box-shadow: 1px 1px 0 0 black;
+}
+
+/* --- Contact Stamp Animation --- */
+@keyframes stamp-slam {
+  0% {
+    opacity: 0;
+    transform: scale(3) rotate(-15deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(0.8) rotate(-15deg);
+  }
+  70% {
+    transform: scale(1.1) rotate(-15deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(-15deg);
+  }
+}
+
+.stamp-active {
+  animation: stamp-slam 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
 /* --- Speech Bubbles --- */
